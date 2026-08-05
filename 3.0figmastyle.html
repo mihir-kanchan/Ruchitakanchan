@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Society — Smart Flat & Community Management</title>
+  <style>
+    :root {
+      /* Palette: Elegant Cream & Warm Sand Theme */
+      --bg-canvas: #FAF7F2;
+      --bg-dot: #E5DFC9;
+      --screen-bg: #FFFFFF;
+      --card-bg: #F5EFEE;
+      --primary-dark: #2C2623;
+      --accent-terracotta: #D86A4B;
+      --accent-sage: #5A7D6C;
+      --accent-amber: #E29578;
+      --text-muted: #807671;
+      --border-color: #E6DFD5;
+      --shadow-soft: 0 16px 36px rgba(44, 38, 35, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      background-image: radial-gradient(var(--bg-dot) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+      color: var(--primary-dark);
+      overflow-x: auto;
+      min-height: 100vh;
+      padding: 40px;
+    }
+
+    /* Floating Figma Bar */
+    .figma-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      padding: 12px 28px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      z-index: 1000;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .figma-bar .title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--primary-dark);
+    }
+
+    .figma-bar .badge {
+      background: rgba(216, 106, 75, 0.12);
+      color: var(--accent-terracotta);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Canvas Grid Container */
+    .canvas-container {
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+      margin-top: 60px;
+      width: max-content;
+    }
+
+    .row-header {
+      margin-bottom: 24px;
+    }
+
+    .row-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .row-title::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-terracotta);
+      border-radius: 50%;
+    }
+
+    .row-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      margin-left: 20px;
+    }
+
+    .screens-row {
+      display: flex;
+      gap: 36px;
+    }
+
+    /* Artboard Setup */
+    .artboard {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .artboard-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mobile Frame */
+    .phone-frame {
+      width: 285px;
+      height: 590px;
+      background-color: var(--screen-bg);
+      border-radius: 38px;
+      box-shadow: var(--shadow-soft), 0 0 0 1px rgba(0,0,0,0.04);
+      color: var(--primary-dark);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Mobile Components */
+    .status-bar {
+      height: 38px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .screen-content {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .bottom-nav {
+      height: 56px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .nav-item.active {
+      color: var(--accent-terracotta);
+      font-weight: 700;
+    }
+
+    .brand-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--primary-dark);
+    }
+
+    .btn-primary {
+      background: var(--accent-terracotta);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(216, 106, 75, 0.25);
+    }
+
+    .btn-secondary {
+      background: var(--card-bg);
+      color: var(--primary-dark);
+      border: 1px solid var(--border-color);
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      width: 100%;
+      text-align: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .badge-tag {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    .badge-unpaid {
+      background: rgba(216, 106, 75, 0.15);
+      color: var(--accent-terracotta);
+    }
+
+    .badge-paid {
+      background: rgba(90, 125, 108, 0.15);
+      color: var(--accent-sage);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 11px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Figma Board Bar -->
+  <div class="figma-bar">
+    <span class="title">Our Society — Flat Maintenance & Builder Ecosystem</span>
+    <span class="badge">Official App Architecture</span>
+  </div>
+
+  <div class="canvas-container">
+
+    <!-- ROW 1: ROLE SELECTION & RESIDENT EXPERIENCE -->
+    <div>
+      <div class="row-header">
+        <div class="row-title">Phase 1: Resident Portal & Bill Payments</div>
+        <div class="row-subtitle">Resident login flow, outstanding dues breakdown, and notice board</div>
+      </div>
+      
+      <div class="screens-row">
+
+        <!-- Screen 1: Splash / Role Switcher -->
+        <div class="artboard">
+          <div class="artboard-label">01_Role Login</div>
+          <div class="phone-frame" style="background: var(--bg-canvas); justify-content: space-between; padding: 24px 16px;">
+            <div style="margin-top: 40px; text-align: center;">
+              <div class="brand-title" style="color: var(--accent-terracotta); font-size: 28px;">Our Society</div>
+              <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Smart Living & Maintenance Management</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 4px;">Select Login Portal</div>
+              <button class="btn-primary" style="padding: 14px;">🏡 Login as Resident / Tenant</button>
+              <button class="btn-secondary" style="padding: 14px;">🏢 Builder / Society Admin</button>
+            </div>
+
+            <div style="font-size: 10px; color: var(--text-muted); text-align: center;">Powered by Our Society App</div>
+          </div>
+        </div>
+
+        <!-- Screen 2: Resident Home Feed -->
+        <div class="artboard">
+          <div class="artboard-label">02_Resident Home</div>
+          <div class="phone-frame">
+            <div class="status-bar"><span>9:41</span><span>5G</span></div>
+            <div class="screen-content">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <div>
+                  <span style="font-size: 10px; color: var(--text-muted);">Flat 402 • Tower B</span>
+                  <div style="font-size: 15px; font-weight: 800;">Skyline Heights</div>
+                </div>
+                <div style="width: 32px; height: 32px; background: var(--card-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">🔔</div>
+              </div>
+
+              <!-- Unpaid Dues Card -->
+              <div class="card" style="background: var(--primary-dark); color: #fff; margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 10px; opacity: 0.7;">AUGUST DUES</span>
+                  <span class="badge-tag badge-unpaid">Due Aug 10</span>
+                </div>
+                <div style="font-size: 22px; font-weight: 800; margin: 8px 0;">₹4,850.00</div>
+                <p style="font-size: 10px; opacity: 0.7; margin-bottom: 12px;">Maintenance + Water Meter Bill</p>
+                <button class="btn-primary">Pay All Dues →</button>
+              </div>
+
+              <div style="font-size: 12px; font-weight: 700; margin-bottom: 10px;">Quick Utilities</div>
+              <div class="grid-2">
+                <div class="card" style="text-align: center;">
+                  <div style="font-size: 18px; margin-bottom: 4px;">🚰</div>
+                  <div style="font-size: 11px; font-weight: 700;">Water Meter</div>
+                </div>
+                <div class="card" style="text-align: center;">
+                  <div style="font-size: 18px; margin-bottom: 4px;">🛡️</div>
+                  <div style="font-size: 11px; font-weight: 700;">Gate Approval</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bottom-nav">
+              <div class="nav-item active">Home</div>
+              <div class="nav-item">Bills</div>
+              <div class="nav-item">Community</div>
+              <div class="nav-item">Profile</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 3: Detailed Maintenance Breakdown -->
+        <div class="artboard">
+          <div class="artboard-label">03_Maintenance Invoice</div>
+          <div class="phone-frame">
+            <div class="status-bar"><span>9:41</span><span>5G</span></div>
+            <div class="screen-content" style="justify-content: space-between;">
+              <div>
+                <div style="font-size: 16px; font-weight: 800; margin-bottom: 4px;">Statement #OS-8492</div>
+                <span style="font-size: 10px; color: var(--text-muted);">Issued by Our Society Billing Engine</span>
+
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
+                  <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-size: 11px; font-weight: 700;">Flat Maintenance</div>
+                      <div style="font-size: 9px; color: var(--text-muted);">Fixed Rate</div>
+                    </div>
+                    <span style="font-size: 12px; font-weight: 800;">₹3,000</span>
+                  </div>
+
+                  <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-size: 11px; font-weight: 700;">Water Meter Charge</div>
+                      <div style="font-size: 9px; color: var(--text-muted);">180 Units Consumed</div>
+                    </div>
+                    <span style="font-size: 12px; font-weight: 800;">₹1,100</span>
+                  </div>
+
+                  <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-size: 11px; font-weight: 700;">Clubhouse & Gym</div>
+                      <div style="font-size: 9px; color: var(--text-muted);">Monthly Fee</div>
+                    </div>
+                    <span style="font-size: 12px; font-weight: 800;">₹750</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 800;">
+                  <span>Total Amount Due</span>
+                  <span style="color: var(--accent-terracotta);">₹4,850</span>
+                </div>
+                <button class="btn-primary">Pay via UPI / Card</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 4: Society Notice Board -->
+        <div class="artboard">
+          <div class="artboard-label">04_Community Notice Board</div>
+          <div class="phone-frame">
+            <div class="status-bar"><span>9:41</span><span>5G</span></div>
+            <div class="screen-content">
+              <div style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Society Announcements</div>
+
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="card" style="border-left: 4px solid var(--accent-terracotta);">
+                  <span class="badge-tag badge-unpaid" style="margin-bottom: 4px;">URGENT</span>
+                  <div style="font-size: 12px; font-weight: 700;">Elevator Maintenance</div>
+                  <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Tower B lifts will be undergoing routine service today from 2 PM to 5 PM.</p>
+                </div>
+
+                <div class="card" style="border-left: 4px solid var(--accent-sage);">
+                  <span class="badge-tag badge-paid" style="margin-bottom: 4px;">COMMUNITY</span>
+                  <div style="font-size: 12px; font-weight: 700;">Society General Meeting</div>
+                  <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Quarterly resident discussion this Sunday at 10:00 AM in the Clubhouse.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bottom-nav">
+              <div class="nav-item">Home</div>
+              <div class="nav-item">Bills</div>
+              <div class="nav-item active">Community</div>
+              <div class="nav-item">Profile</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ROW 2: BUILDER / SOCIETY OWNER PORTAL -->
+    <div>
+      <div class="row-header">
+        <div class="row-title">Phase 2: Builder & Admin Control Suite</div>
+        <div class="row-subtitle">Community setup, automated billing distribution, and ledger management</div>
+      </div>
+
+      <div class="screens-row">
+
+        <!-- Screen 5: Builder Dashboard -->
+        <div class="artboard">
+          <div class="artboard-label">05_Builder Dashboard</div>
+          <div class="phone-frame">
+            <div class="status-bar"><span>9:41</span><span>5G</span></div>
+            <div class="screen-content">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div>
+                  <span style="font-size: 10px; color: var(--text-muted);">Admin Portal</span>
+                  <div style="font-size: 15px; font-weight: 800;">Our Society Admin</div>
+                </div>
+                <span class="badge-tag badge-paid">+ Create Group</span>
+              </div>
+
+              <!-- Revenue Overview -->
+              <div class="card" style="margin-bottom: 14px;">
+                <span style="font-size: 10px; color: var(--text-muted);">TOTAL MAINTENANCE COLLECTED</span>
+                <div style="font-size: 20px; font-weight: 800; margin: 4px 0; color: var(--accent-sage);">₹4,12,000 / ₹5,00,000</div>
+                <div style="height: 6px; background: #E0E0E0; border-radius: 3px; overflow: hidden; margin-top: 6px;">
+                  <div style="width: 82%; height: 100%; background: var(--accent-sage);"></div>
+                </div>
+              </div>
+
+              <div style="font-size: 12px; font-weight: 700; margin-bottom: 8px;">Admin Tools</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11px; font-weight: 700;">📊 Generate Monthly Invoices</span>
+                  <span>→</span>
+                </div>
+                <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11px; font-weight: 700;">🏘️ Manage Flat Members (120)</span>
+                  <span>→</span>
+                </div>
+                <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11px; font-weight: 700;">📢 Broadcast Announcement</span>
+                  <span>→</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 6: Create Society Group -->
+        <div class="artboard">
+          <div class="artboard-label">06_Create Society Group</div>
+          <div class="phone-frame">
+            <div class="status-bar"><span>9:41</span><span>5G</span></div>
+            <div class="screen-content" style="justify-content: space-between;">
+              <div>
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 4px;">Register New Society</h3>
+                <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 16px;">Set up flat groups, resident invites, and auto-billing.</p>
+
+                <input class="input-field" placeholder="Society / Project Name (e.g. Skyline Oasis)" />
+                <input class="input-field" placeholder="Total Wings / Towers" />
+                <input class="input-field" placeholder="Base Maintenance Charge (₹)" />
+                <input class="input-field" placeholder="Water Utility Rate per Unit (₹)" />
+              </div>
+
+              <button class="btn-primary">Build Community & Launch</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 7: Resident Ledger Tracker -->
+        <div class="artboard">
+          <div class="artboard-label">07_Resident Defaulter Ledger</div>
+          <div class="phone-frame">
+            <div class="status-bar"><span>9:41</span><span>5G</span></div>
+            <div class="screen-content">
+              <div style="font-size: 15px; font-weight: 800; margin-bottom: 12px;">Payment Ledger</div>
+
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <div style="font-size: 11px; font-weight: 700;">Flat 101 • Rahul Sharma</div>
+                    <div style="font-size: 9px; color: var(--accent-sage); font-weight: 700;">PAID • ₹4,850</div>
+                  </div>
+                  <span style="font-size: 10px; color: var(--text-muted);">Aug 02</span>
+                </div>
+
+                <div class="card" style="display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--accent-terracotta);">
+                  <div>
+                    <div style="font-size: 11px; font-weight: 700;">Flat 204 • Priya Patel</div>
+                    <div style="font-size: 9px; color: var(--accent-terracotta); font-weight: 700;">UNPAID • ₹4,850</div>
+                  </div>
+                  <button style="padding: 4px 8px; background: var(--accent-terracotta); color: #fff; border: none; border-radius: 6px; font-size: 9px;">Send Nudge</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
